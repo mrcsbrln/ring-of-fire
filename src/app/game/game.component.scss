@@ -1,0 +1,44 @@
+@import '../../styles.scss';
+
+.card-stack {
+    position: relative;
+    img{
+        position: absolute;
+        width: 120px;
+    }
+}
+
+.field{
+    width: 100vw;
+    height: 100vh;
+    background-image: url('../../assets/img/board.jpg');
+    @include dFlex();
+}
+
+.pick-card {
+    animation: pick-card-animation 2s ease-in-out;
+    transform: scale(1.3) translateX(140px) translateY(-150px) rotate(-10deg);
+}
+
+.top-card {
+    cursor: pointer;
+    transition: all 500ms ease-in-out;
+    &:hover {
+        transform: scale(1.1) translateY(-16px);
+    }
+}
+
+@keyframes pick-card-animation {
+    0% {
+        transform: scale(1);
+    }
+    40% {
+        transform: scale(1.7);
+    }
+    60% {
+        transform: scale(1.7);
+    }
+    100% {
+        transform: scale(1.3) translateX(140px) translateY(-150px) rotate(-10deg);
+    }
+}

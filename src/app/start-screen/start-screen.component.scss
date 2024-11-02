@@ -1,0 +1,29 @@
+@import '../../../../ringOfFire/src/styles.scss';
+
+.start-screen {
+    background-color: #404040;
+    width: 100vw;
+    height: 100vh;
+    max-width: 100%;
+    @include dFlex();
+    img {
+        height: 100vh;
+    }
+}
+
+.start-label-box {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 100px;
+    @include dFlex();
+    img {
+        width: 30vw;
+        height: auto;
+        &:hover {
+            filter: brightness(1.1);
+            cursor: pointer;
+        }
+    }
+}
+
