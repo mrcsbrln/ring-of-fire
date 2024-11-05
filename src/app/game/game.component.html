@@ -6,15 +6,8 @@
       src="assets/img/cards/card_cover.png"
       alt=""
     />
-    } @if(pickCardAnimation){
-    <img
-      (click)="takeCard()"
-      class="pick-card"
-      style="right: 25px"
-      src="assets/img/cards/spade_1.png"
-      alt=""
-    />
-    } @else {
+    }
+
     <img
       (click)="takeCard()"
       class="top-card"
@@ -22,6 +15,21 @@
       src="assets/img/cards/card_cover.png"
       alt=""
     />
+
+    @for(card of game.playedCards; track card) {
+      <img 
+        src="assets/img/cards/{{ card }}.png"
+        class="played-card"
+      />
+    }
+
+    @if(pickCardAnimation) {
+      <img
+        class="pick-card"
+        style="right: 25px"
+        src="assets/img/cards/{{ currentCard }}.png"
+        alt=""
+      />
     }
   </div>
 </div>

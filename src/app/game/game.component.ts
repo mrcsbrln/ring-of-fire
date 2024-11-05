@@ -26,11 +26,19 @@ export class GameComponent {
   }
 
   takeCard() {
-    const card = this.game.stack.pop();
-    if (card != undefined) {
-      this.currentCard = card;
-      this.pickCardAnimation = true;
+    if (!this.pickCardAnimation) {
+      const card = this.game.stack.pop();
+      if (card != undefined) {
+        this.currentCard = card;
+        this.pickCardAnimation = true;
+      }
+      console.log(this.currentCard);
     }
-    console.log(this.currentCard);
+
+    setTimeout(() => {
+      this.pickCardAnimation = false;
+      this.game.playedCards.push(this.currentCard);
+    }, 2000);
+
   }
 }
