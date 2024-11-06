@@ -1,3 +1,7 @@
+@for(player of game.players; track $index){
+  <app-player [ngStyle]="{'top.px': 100 + $index * 120 }" [name]="player" class="player-position" />
+}
+
 <div class="field">
   <div class="card-stack">
     @for(card of [0,1,2,3]; track $index) {
@@ -16,7 +20,7 @@
       alt=""
     />
 
-    @for(card of game.playedCards; track card) {
+    @for(card of game.playedCards; track $index) {
       <img 
         src="assets/img/cards/{{ card }}.png"
         class="played-card"
@@ -33,3 +37,7 @@
     }
   </div>
 </div>
+
+<button mat-fab class="btn-add">
+  <mat-icon>add</mat-icon>
+</button>
