@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-dialog-add-player',
@@ -8,5 +9,6 @@ import { Component } from '@angular/core';
   styleUrl: './dialog-add-player.component.scss'
 })
 export class DialogAddPlayerComponent {
-
+  constructor(@Inject(MAT_DIALOG_DATA) public data: {name: string}) { }
+  name = '';
 }

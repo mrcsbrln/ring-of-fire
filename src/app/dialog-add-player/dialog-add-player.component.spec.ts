@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { DialogAddPlayerComponent } from './dialog-add-player.component';
 
 describe('DialogAddPlayerComponent', () => {
