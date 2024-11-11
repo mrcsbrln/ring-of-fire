@@ -10,6 +10,8 @@ import {
 import {FormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatButtonModule} from '@angular/material/button';
+
 
 export interface DialogData {
   name: string;
@@ -25,8 +27,8 @@ export interface DialogData {
     MatDialogContent,
     MatDialogActions,
     MatDialogClose,
-    DialogAddPlayerComponent,
     MatDialogModule,
+    MatButtonModule
   ],
   templateUrl: './dialog-add-player.component.html',
   styleUrl: './dialog-add-player.component.scss'
