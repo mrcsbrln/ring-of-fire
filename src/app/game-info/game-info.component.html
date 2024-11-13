@@ -1,9 +1,7 @@
 <mat-card class="game-info">
-    <mat-card-content>
-        <mat-card-header>
-            <mat-card-title>{{ title }}</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>{{ description }}</mat-card-content>
-    </mat-card-content>
+    <mat-card-header>
+        <mat-card-title>{{ card ? title : 'Pick a card' }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>{{ card ? description : 'Click on the card stack to select the first card.' }}</mat-card-content>
   </mat-card>
   
