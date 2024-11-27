@@ -20,6 +20,7 @@ import { GameInfoComponent } from "../game-info/game-info.component";
   styleUrl: './game.component.scss'
 })
 
+
 export class GameComponent {
 
   pickCardAnimation = false;
