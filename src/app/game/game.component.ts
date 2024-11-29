@@ -1,39 +1,46 @@
-import { Component } from '@angular/core';
-import {
-  MatDialog
-} from '@angular/material/dialog';
+import { Component, inject } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { Game } from '../../models/game';
-import { PlayerComponent } from "../player/player.component";
+import { PlayerComponent } from '../player/player.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
-import { GameInfoComponent } from "../game-info/game-info.component";
-
-
+import { GameInfoComponent } from '../game-info/game-info.component';
+import { Firestore, collection, collectionData } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-game',
   standalone: true,
-  imports: [CommonModule, PlayerComponent, MatButtonModule, MatIconModule, GameInfoComponent],
+  imports: [
+    CommonModule,
+    PlayerComponent,
+    MatButtonModule,
+    MatIconModule,
+    GameInfoComponent,
+  ],
   templateUrl: './game.component.html',
-  styleUrl: './game.component.scss'
+  styleUrl: './game.component.scss',
 })
-
-
 export class GameComponent {
+  private firestore: Firestore = inject(Firestore);
+  games$: Observable<Game[]>;
 
   pickCardAnimation = false;
-  game!: Game;
+  game: Game = new Game();
   currentCard = '';
 
-  constructor(public dialog: MatDialog){
-    this.newGame();
+  constructor(public dialog: MatDialog) {
+    const gamesCollection = collection(this.firestore, 'games');
+    this. games$ = collectionData(gamesCollection) as Observable<Game[]>;;
+    this.games$.subscribe((games) => {
+      console.log('Firestore-Daten:', games);
+    });
   }
 
-  newGame(){
+  newGame() {
     this.game = new Game();
-    console.log(this.game);
   }
 
   openDialog(): void {
@@ -56,11 +63,11 @@ export class GameComponent {
       console.log(this.currentCard);
     }
     this.game.currentPlayer++;
-    this.game.currentPlayer = this.game.currentPlayer % this.game.players.length;
+    this.game.currentPlayer =
+      this.game.currentPlayer % this.game.players.length;
     setTimeout(() => {
       this.pickCardAnimation = false;
       this.game.playedCards.push(this.currentCard);
     }, 2000);
-
   }
 }
