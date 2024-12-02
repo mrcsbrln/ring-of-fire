@@ -7,8 +7,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
 import { GameInfoComponent } from '../game-info/game-info.component';
-import { Firestore, collection, collectionData } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { Firestore, collection, collectionData, addDoc, CollectionReference, Unsubscribe } from '@angular/fire/firestore';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-game',
@@ -25,22 +25,41 @@ import { Observable } from 'rxjs';
 })
 export class GameComponent {
   private firestore: Firestore = inject(Firestore);
-  games$: Observable<Game[]>;
 
   pickCardAnimation = false;
-  game: Game = new Game();
+  game!: Game;
   currentCard = '';
+  gameSubscription: Subscription | undefined;
 
   constructor(public dialog: MatDialog) {
-    const gamesCollection = collection(this.firestore, 'games');
-    this. games$ = collectionData(gamesCollection) as Observable<Game[]>;;
-    this.games$.subscribe((games) => {
+    const gamesCollection = this.getGamesRef();
+    const games$ = collectionData(gamesCollection) as Observable<Game[]>;
+    this.gameSubscription = games$.subscribe((games) => {
       console.log('Firestore-Daten:', games);
     });
+    this.newGame();
+    console.log(this.game);
+  }
+
+  ngOnDestroy(){
+    if(this.gameSubscription) {
+      this.gameSubscription.unsubscribe();
+    }
+  }
+
+  private getGamesRef() {
+    return collection(this.firestore, 'games');
+  }
+
+  addToGameCollection() {
+      addDoc(this.getGamesRef(), this.game.toJSON()).then((documentReference) => {
+        console.log(documentReference);
+      });
   }
 
   newGame() {
     this.game = new Game();
+    this.addToGameCollection();
   }
 
   openDialog(): void {
@@ -71,3 +90,4 @@ export class GameComponent {
     }, 2000);
   }
 }
+
