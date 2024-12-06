@@ -7,8 +7,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
 import { GameInfoComponent } from '../game-info/game-info.component';
-import { Firestore, collection, collectionData, addDoc, CollectionReference, Unsubscribe } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, addDoc, CollectionReference, Unsubscribe, doc, getDoc } from '@angular/fire/firestore';
 import { Observable, Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-game',
@@ -19,6 +21,7 @@ import { Observable, Subscription } from 'rxjs';
     MatButtonModule,
     MatIconModule,
     GameInfoComponent,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss',
@@ -27,20 +30,27 @@ export class GameComponent {
   private firestore: Firestore = inject(Firestore);
 
   pickCardAnimation = false;
-  game!: Game;
+  game: Game | undefined;
   currentCard = '';
   gameSubscription: Subscription | undefined;
 
-  constructor(public dialog: MatDialog) {
-    const gamesCollection = this.getGamesRef();
-    const games$ = collectionData(gamesCollection) as Observable<Game[]>;
-    this.gameSubscription = games$.subscribe((games) => {
-      console.log('Firestore-Daten:', games);
-    });
-    this.newGame();
-    console.log(this.game);
+  constructor(private route: ActivatedRoute, public dialog: MatDialog) {
+    // const gamesCollection = this.getGamesRef();
+    // const games$ = collectionData(gamesCollection) as Observable<Game[]>;
+    // this.gameSubscription = games$.subscribe((games) => {
+    //   console.log('Firestore-Daten:', games);
+    // });
+    // this.newGame();
+    // console.log(this.game);
   }
 
+  ngOnInit() {
+    this.route.params.subscribe((params) => {
+      console.log('Params:', params['id']);
+      this.loadGame(params['id']);
+    });
+  }
+  
   ngOnDestroy(){
     if(this.gameSubscription) {
       this.gameSubscription.unsubscribe();
@@ -51,28 +61,42 @@ export class GameComponent {
     return collection(this.firestore, 'games');
   }
 
-  addToGameCollection() {
-      addDoc(this.getGamesRef(), this.game.toJSON()).then((documentReference) => {
-        console.log(documentReference);
-      });
+  private async loadGame(id: string) {
+    const docRef = doc(this.firestore, 'games', id);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      this.game = Game.fromJSON(docSnap.data());
+      console.log('loaded game:', this.game)
+    }
   }
 
-  newGame() {
-    this.game = new Game();
-    this.addToGameCollection();
-  }
+  // private addToGameCollection() {
+  //     addDoc(this.getGamesRef(), this.game.toJSON()).then((documentReference) => {
+  //       console.log(documentReference);
+  //     });
+  // }
+
+  // private newGame() {
+  //   this.game = new Game();
+  //   this.addToGameCollection();
+  // }
 
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogAddPlayerComponent);
 
     dialogRef.afterClosed().subscribe((name: string) => {
-      if (name !== undefined) {
+      if (name !== undefined && this.game) {
         this.game.players.push(name);
       }
     });
   }
 
   takeCard() {
+    if (!this.game) {
+      return;
+    }
+
     if (!this.pickCardAnimation) {
       const card = this.game.stack.pop();
       if (card != undefined) {
@@ -85,8 +109,10 @@ export class GameComponent {
     this.game.currentPlayer =
       this.game.currentPlayer % this.game.players.length;
     setTimeout(() => {
-      this.pickCardAnimation = false;
-      this.game.playedCards.push(this.currentCard);
+      if (this.game) {
+        this.pickCardAnimation = false;
+        this.game.playedCards.push(this.currentCard);
+      }
     }, 2000);
   }
 }
