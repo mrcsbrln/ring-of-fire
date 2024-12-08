@@ -33,6 +33,7 @@ export class GameComponent {
   game: Game | undefined;
   currentCard = '';
   gameSubscription: Subscription | undefined;
+  error = false;
 
   constructor(private route: ActivatedRoute, public dialog: MatDialog) {
     // const gamesCollection = this.getGamesRef();
@@ -57,10 +58,6 @@ export class GameComponent {
     }
   }
 
-  private getGamesRef() {
-    return collection(this.firestore, 'games');
-  }
-
   private async loadGame(id: string) {
     const docRef = doc(this.firestore, 'games', id);
     const docSnap = await getDoc(docRef);
@@ -68,6 +65,8 @@ export class GameComponent {
     if (docSnap.exists()) {
       this.game = Game.fromJSON(docSnap.data());
       console.log('loaded game:', this.game)
+    } else {
+      this.error = true;
     }
   }
 
