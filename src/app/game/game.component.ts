@@ -7,10 +7,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
 import { GameInfoComponent } from '../game-info/game-info.component';
-import { Firestore, collection, collectionData, addDoc, CollectionReference, Unsubscribe, doc, getDoc } from '@angular/fire/firestore';
-import { Observable, Subscription } from 'rxjs';
+import { Firestore, doc, getDoc, updateDoc } from '@angular/fire/firestore';
+import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ThisReceiver } from '@angular/compiler';
 
 @Component({
   selector: 'app-game',
@@ -34,6 +35,7 @@ export class GameComponent {
   currentCard = '';
   gameSubscription: Subscription | undefined;
   error = false;
+  id = '';
 
   constructor(private route: ActivatedRoute, public dialog: MatDialog) {
     // const gamesCollection = this.getGamesRef();
@@ -47,13 +49,13 @@ export class GameComponent {
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
-      console.log('Params:', params['id']);
       this.loadGame(params['id']);
+      this.id = params['id'];
     });
   }
-  
-  ngOnDestroy(){
-    if(this.gameSubscription) {
+
+  ngOnDestroy() {
+    if (this.gameSubscription) {
       this.gameSubscription.unsubscribe();
     }
   }
@@ -64,22 +66,11 @@ export class GameComponent {
 
     if (docSnap.exists()) {
       this.game = Game.fromJSON(docSnap.data());
-      console.log('loaded game:', this.game)
+      console.log('loaded game:', this.game);
     } else {
       this.error = true;
     }
   }
-
-  // private addToGameCollection() {
-  //     addDoc(this.getGamesRef(), this.game.toJSON()).then((documentReference) => {
-  //       console.log(documentReference);
-  //     });
-  // }
-
-  // private newGame() {
-  //   this.game = new Game();
-  //   this.addToGameCollection();
-  // }
 
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogAddPlayerComponent);
@@ -91,19 +82,23 @@ export class GameComponent {
     });
   }
 
+  saveGame() {
+    if (this.game) {
+      const docRef = doc(this.firestore, 'games', this.id);
+      updateDoc(docRef, this.game.toJSON());
+    }
+  }
+
   takeCard() {
-    if (!this.game) {
+    if (!this.game || this.pickCardAnimation) {
       return;
     }
-
-    if (!this.pickCardAnimation) {
-      const card = this.game.stack.pop();
-      if (card != undefined) {
-        this.currentCard = card;
-        this.pickCardAnimation = true;
-      }
-      console.log(this.currentCard);
+    const card = this.game.stack.pop();
+    if (card != undefined) {
+      this.currentCard = card;
+      this.pickCardAnimation = true;
     }
+    console.log(this.currentCard);
     this.game.currentPlayer++;
     this.game.currentPlayer =
       this.game.currentPlayer % this.game.players.length;
@@ -111,8 +106,8 @@ export class GameComponent {
       if (this.game) {
         this.pickCardAnimation = false;
         this.game.playedCards.push(this.currentCard);
+        this.saveGame();
       }
     }, 2000);
   }
 }
-
