@@ -5,6 +5,9 @@ export class Game {
     public stack: string[] = [];
     public playedCards: string[] = [];
     public currentPlayer: number = 0;
+    public currentCard = '';
+    public pickCardAnimation = false;
+
 
     constructor() {
         for(let i = 1; i < 14; i++) {
@@ -29,16 +32,20 @@ export class Game {
             players: this.players,
             stack: this.stack,
             playedCards: this.playedCards,
-            currentPlayer: this.currentPlayer
+            currentPlayer: this.currentPlayer,
+            currentCard: this.currentCard,
+            pickCardAnimation: this.pickCardAnimation,
         }
     }
 
     public static fromJSON(data: DocumentData) {
         const game = new Game();
-        game.currentPlayer = data["currentPlayer"];
-        game.playedCards = data["playedCards"];
-        game.players = data["players"];
-        game.stack = data["stack"];
+        game.currentPlayer = data['currentPlayer'];
+        game.playedCards = data['playedCards'];
+        game.players = data['players'];
+        game.stack = data['stack'];
+        game.currentCard = data['currentCard'];
+        game.pickCardAnimation = data['pickCardAnimation'];
         return game
     }
 }

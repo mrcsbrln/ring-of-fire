@@ -1,54 +1,50 @@
-@if(game) {
-  @for(player of game.players; track $index){
-    <app-player [ngStyle]="{'top.px': 100 + $index * 80 }" [name]="player" class="player-position" [playerActive]="$index == game.currentPlayer" />
-  }
-  
-  <div class="field">
-    <div class="card-stack">
-      @for(card of [0,1,2,3]; track $index) {
-      <img
-        [ngStyle]="{ 'right.px': $index * 5 }"
-        src="assets/img/cards/card_cover.png"
-        alt=""
-      />
-      }
-  
-      <img
-        (click)="takeCard()"
-        class="top-card"
-        style="right: 25px"
-        src="assets/img/cards/card_cover.png"
-        alt=""
-      />
-  
-      @for(card of game.playedCards; track $index) {
-        <img 
-          src="assets/img/cards/{{ card }}.png"
-          class="played-card"
-        />
-      }
-  
-      @if(pickCardAnimation) {
-        <img
-          class="pick-card"
-          style="right: 25px"
-          src="assets/img/cards/{{ currentCard }}.png"
-          alt=""
-        />
-      }
-    </div>
+@if(game) { @for(player of game.players; track $index){
+<app-player
+  [ngStyle]="{ 'top.px': 100 + $index * 80 }"
+  [name]="player"
+  class="player-position"
+  [playerActive]="$index === game.currentPlayer"
+/>
+}
+
+<div class="field">
+  <div class="card-stack">
+    @for(card of [0,1,2,3]; track $index) {
+    <img
+      [ngStyle]="{ 'right.px': $index * 5 }"
+      src="assets/img/cards/card_cover.png"
+      alt=""
+    />
+    }
+
+    <img
+      (click)="takeCard()"
+      class="top-card"
+      style="right: 25px"
+      src="assets/img/cards/card_cover.png"
+      alt=""
+    />
+
+    @for(card of game.playedCards; track $index) {
+    <img src="assets/img/cards/{{ card }}.png" class="played-card" />
+    } @if(game.pickCardAnimation) {
+    <img
+      class="pick-card"
+      style="right: 25px"
+      src="assets/img/cards/{{ game.currentCard }}.png"
+      alt=""
+    />
+    }
   </div>
-  
-  <app-game-info [card]="currentCard" />
-  
-  <button mat-fab color="primary" (click)="openDialog()" class="btn-add">
-    <mat-icon>add</mat-icon>
-  </button>  
-}
-@else {
-  @if(error) {
-    <div>GameID does not exist</div>
-  } @else {
-    <mat-spinner></mat-spinner>
-  }
-}
+</div>
+
+<app-game-info [card]="game.currentCard" />
+
+<button mat-fab color="primary" (click)="openDialog()" class="btn-add">
+  <mat-icon>add</mat-icon>
+</button>
+} @else { @if(error) {
+<div>GameID does not exist</div>
+} @else {
+<mat-spinner></mat-spinner>
+} }
