@@ -6,6 +6,9 @@
     height: 100vh;
     max-width: 100%;
     @include dFlex();
+    @media (max-width: 960px) {
+        overflow: hidden;
+    }
     img {
         height: 100vh;
     }
@@ -18,7 +21,7 @@
     bottom: 100px;
     @include dFlex();
     img {
-        width: 30vw;
+        width: 400px;
         height: auto;
         &:hover {
             filter: brightness(1.1);

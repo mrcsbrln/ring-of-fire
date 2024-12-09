@@ -2,7 +2,7 @@
 <app-player
   [ngStyle]="{ 'top.px': 100 + $index * 80 }"
   [name]="player"
-  class="player-position"
+  class="player-position hide-mobile"
   [playerActive]="$index === game.currentPlayer"
 />
 }
@@ -44,7 +44,9 @@
   <mat-icon>add</mat-icon>
 </button>
 } @else { @if(error) {
-<div>GameID does not exist</div>
+<div class="loading">GameID does not exist</div>
 } @else {
-<mat-spinner></mat-spinner>
+<div class="loading">
+  <mat-spinner></mat-spinner>
+</div>
 } }

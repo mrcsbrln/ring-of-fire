@@ -1,15 +1,33 @@
-@mixin dFlex($jc: center, $ai: center, $g: 0px){
-    display: flex;
-    justify-content: $jc;
-    align-items: $ai;
-    gap: $g;
+@mixin dFlex($jc: center, $ai: center, $g: 0px) {
+  display: flex;
+  justify-content: $jc;
+  align-items: $ai;
+  gap: $g;
 }
 
 * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+@media (min-width: 720px) {
+    .hide-desktop {
+        display: none;
+    }
+}
+
+@media (max-width: 720px) {
+    .hide-mobile {
+        display: none;
+    }
+}
