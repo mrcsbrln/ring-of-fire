@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { Game } from '../../models/game';
 import { PlayerComponent } from '../player/player.component';
+import { PlayerMobileComponent } from '../player-mobile/player-mobile.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
@@ -18,6 +19,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   imports: [
     CommonModule,
     PlayerComponent,
+    PlayerMobileComponent,
     MatButtonModule,
     MatIconModule,
     GameInfoComponent,

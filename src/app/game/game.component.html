@@ -1,8 +1,15 @@
-@if(game) { @for(player of game.players; track $index){
+@if(game) { @for(player of game.players; track player){
 <app-player
   [ngStyle]="{ 'top.px': 100 + $index * 80 }"
   [name]="player"
   class="player-position hide-mobile"
+  [playerActive]="$index === game.currentPlayer"
+/>
+
+<app-player-mobile
+  [ngStyle]="{ 'left.px': 10 + $index * 120, 'top.px': 0 }"
+  [name]="player"
+  class="player-position hide-desktop"
   [playerActive]="$index === game.currentPlayer"
 />
 }

@@ -1,18 +1,18 @@
 @import '../../styles.scss';
 
 .player{
-    @include dFlex(row, start, center, 0);
-    width: 300px;
-    border-top-left-radius: 48px;
+    @include dFlex(column, start, center, 0);
+    min-width: 50px;
+    max-width: 100px;
     border-bottom-left-radius: 48px;
+    border-bottom-right-radius: 48px;
     span{
-        font-size: 2rem;
-        margin-left: 16px;
+        font-size: 1rem;
     }
     background-color: lightgray;
     img{
-        width: 64px;
-        height: 64px;
+        width: 40px;
+        height: 40px;
         object-fit: cover;
         border-radius: 100%;
     }
